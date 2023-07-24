@@ -6,6 +6,7 @@ import { useFrame } from "@react-three/fiber";
 
 export default function Car(props) {
   const body = useRef();
+  const mesh = useRef();
   const { nodes, materials } = useGLTF("/suzanne.gltf");
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const cameraPosition = new THREE.Vector3();
@@ -14,34 +15,22 @@ export default function Car(props) {
 
   useFrame((state, delta) => {
     const { leftward, rightward } = getKeys();
-    const impulse = { x: 0, y: 0, z: 0 };
-    const impulseStrength = 1 * delta;
+    const impulseStrength = 10 * delta;
 
-    // impulse.z -= impulseStrength;
-    if (impulse.z < 1) {
-      impulse.z -= impulseStrength;
-    }
     if (leftward) {
-      impulse.x -= impulseStrength * 2;
+      mesh.current.position.x -= impulseStrength * 2;
     }
     if (rightward) {
-      impulse.x += impulseStrength * 2;
+      mesh.current.position.x += impulseStrength * 2;
     }
-    // console.log(delta);
-    // body.current.applyImpulse({ x: 0, y: 0, z: 0 });
-    body.current.applyImpulse(impulse);
-    // body.current.translation().z -= impulseStrength;
+    mesh.current.position.z -= impulseStrength;
 
-    const bodyPosition = body.current.translation();
     //CAMERA
-    // const cameraPosition = new THREE.Vector3();
-    cameraPosition.copy(bodyPosition);
+    cameraPosition.copy(mesh.current.position);
     cameraPosition.z += 2.25;
     cameraPosition.y += 2;
-    // const cameraTarget = new THREE.Vector3();
-    cameraTarget.copy(bodyPosition);
+    cameraTarget.copy(mesh.current.position);
     cameraTarget.y += 0.5;
-    console.log();
     state.camera.position.copy(cameraPosition);
     state.camera.lookAt(cameraTarget);
 
@@ -52,16 +41,32 @@ export default function Car(props) {
   });
   return (
     <group {...props} dispose={null}>
-      <RigidBody ref={body}>
+      <RigidBody
+        ref={body}
+        restitution={0.2}
+        friction={1}
+        linearDamping={0.5}
+        angularDamping={0.5}
+      >
         {" "}
-        <mesh
+        {/* <mesh
           castShadow
           receiveShadow
           geometry={nodes.Suzanne.geometry}
           material={nodes.Suzanne.material}
           position={[0, 1, 0]}
           scale={[0.25, 0.25, 0.25]}
-        />
+        /> */}
+        <mesh
+          ref={mesh}
+          castShadow
+          receiveShadow
+          position={[0, 1, 0]}
+          scale={[0.25, 0.25, 0.25]}
+        >
+          <sphereGeometry />
+          <meshBasicMaterial color={"hotpink"} wireframe />
+        </mesh>
         <directionalLight
           castShadow
           position={[4, 4, 1]}

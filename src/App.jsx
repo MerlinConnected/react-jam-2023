@@ -24,7 +24,7 @@ export default function App() {
           <RigidBody type="fixed">
             <mesh position={[0, -0.1, 0]} receiveShadow>
               <boxGeometry args={[200, 0.2, 200]} />
-              <meshPhysicalMaterial color="darkblue" />
+              <meshPhysicalMaterial color="darkblue" wireframe />
             </mesh>
           </RigidBody>
           <Car castShadow></Car>
