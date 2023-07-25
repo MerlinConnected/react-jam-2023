@@ -1,14 +1,13 @@
 import * as THREE from "three";
 import React, { useRef } from "react";
 import {
-  OrthographicCamera,
   PerspectiveCamera,
   PointerLockControls,
   useGLTF,
   useKeyboardControls,
 } from "@react-three/drei";
-import { RigidBody } from "@react-three/rapier";
 import { useFrame } from "@react-three/fiber";
+import Lights from "./Lights";
 
 const MyCamera = (props) => {
   return (
@@ -59,16 +58,8 @@ const CarObject = ({ children }) => {
 
     mesh.current.position.x -= direction.x * delta * speed;
     mesh.current.position.z -= direction.z * delta * speed;
-
   });
   return (
-    // <RigidBody
-    //   ref={body}
-    //   restitution={0.2}
-    //   friction={1}
-    //   linearDamping={0.5}
-    //   angularDamping={0.5}
-    // >
     <group dispose={null}>
       <mesh
         ref={mesh}
@@ -84,57 +75,33 @@ const CarObject = ({ children }) => {
         <meshBasicMaterial color={"hotpink"} />
       </mesh>
     </group>
-    /* <mesh
-          ref={mesh}
-          castShadow
-          receiveShadow
-          position={[0, 1, 0]}
-          scale={[0.25, 0.25, 0.25]}
-        >
-          { <sphereGeometry /> }
-
-          <meshBasicMaterial color={"hotpink"} wireframe />
-        </mesh> */
-    // <directionalLight
-    //   castShadow
-    //   position={[4, 4, 1]}
-    //   intensity={1.5}
-    //   shadow-mapSize={[1024, 1024]}
-    //   shadow-camera-near={1}
-    //   shadow-camera-far={10}
-    //   shadow-camera-top={10}
-    //   shadow-camera-right={10}
-    //   shadow-camera-bottom={-10}
-    //   shadow-camera-left={-10}
-    // />
-    // </RigidBody>
   );
 };
 
 export default function Car() {
+  const lights = useRef();
   // const body = useRef();
   useFrame((state, delta) => {
-    console.log(state.camera);
+    console.log(lights);
   });
   return (
     <CarObject>
       <MyCamera />
-    </CarObject>
-        </mesh> */}
-        <directionalLight
-          castShadow
-          position={[4, 4, 1]}
-          intensity={1.5}
-          shadow-mapSize={[1024, 1024]}
-          shadow-camera-near={1}
-          shadow-camera-far={10}
-          shadow-camera-top={10}
-          shadow-camera-right={10}
-          shadow-camera-bottom={-10}
-          shadow-camera-left={-10}
-        />
-      </RigidBody>
+      {/* <directionalLight
+        ref={lights}
+        castShadow
+        position={[4, 4, 1]}
+        intensity={1.5}
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-near={1}
+        shadow-camera-far={10}
+        shadow-camera-top={10}
+        shadow-camera-right={10}
+        shadow-camera-bottom={-10}
+        shadow-camera-left={-10}
+      /> */}
       <Lights />
-    </group>
+    </CarObject>
+    // </mesh> */}
   );
 }
