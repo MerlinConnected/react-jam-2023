@@ -38,6 +38,7 @@ export default function App() {
               scale={[10, 10, 10]}
               position={[0, 0, 0]}
             />
+            <Obstacle />
           </RigidBody>
           <RigidBody type="fixed">
             <mesh position={[0, -0.1, 0]} receiveShadow>
@@ -49,7 +50,7 @@ export default function App() {
         </Physics>
 
         <Sky />
-        <EffectComposer disableNormalPass multisampling={8}>
+        {/* <EffectComposer disableNormalPass multisampling={8}>
           <N8AO
             aoRadius={50}
             distanceFalloff={0.2}
@@ -58,7 +59,7 @@ export default function App() {
             halfRes
           />
           <TiltShift2 />
-        </EffectComposer>
+        </EffectComposer> */}
       </Canvas>
     </KeyboardControls>
   );

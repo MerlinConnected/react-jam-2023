@@ -15,7 +15,7 @@ const MyCamera = (props) => {
       fov={75}
       rotation={[0, 0, 0]}
       makeDefault={true}
-      position={[0, 6, 10]}
+      position={[0, 6, 20]}
     >
       {/* <PointerLockControls
         addEventListener={undefined}
@@ -29,6 +29,7 @@ const MyCamera = (props) => {
 
 const CarObject = ({ children }) => {
   const mesh = useRef();
+  const backCar = useRef();
   const { nodes, materials } = useGLTF("/suzanne.gltf");
   const [subscribeKeys, getKeys] = useKeyboardControls();
   const cameraPosition = new THREE.Vector3();
@@ -45,12 +46,14 @@ const CarObject = ({ children }) => {
 
     if (leftward) {
       mesh.current.rotation.y += 1 * delta;
+      // mesh.current.position.x -= 10 * delta;
     }
     if (rightward) {
       mesh.current.rotation.y -= 1 * delta;
+      // mesh.current.position.x += 10 * delta;
     }
     frontVector.set(0, 0, 1);
-    sideVector.set(Number(leftward) - Number(rightward), 0, 0);
+    sideVector.set((Number(leftward) - Number(rightward)) * 0.25, 0, 0);
     direction
       .subVectors(frontVector, sideVector)
       .normalize()
@@ -58,16 +61,24 @@ const CarObject = ({ children }) => {
 
     mesh.current.position.x -= direction.x * delta * speed;
     mesh.current.position.z -= direction.z * delta * speed;
+
+    backCar.current.position.lerp(mesh.current.position, 0.5);
+    backCar.current.quaternion.slerp(mesh.current.quaternion, 0.5);
+    // state.camera.lookAt(mesh.current.position);
   });
   return (
     <group dispose={null}>
+      <mesh castShadow receiveShadow position={[0, 0.5, 4]} ref={mesh}>
+        <boxGeometry scale={[10, 10, 10]} />
+        <meshBasicMaterial color={"darkblue"} />
+      </mesh>
       <mesh
-        ref={mesh}
+        ref={backCar}
         castShadow
         receiveShadow
         // geometry={nodes.Suzanne.geometry}
         // material={nodes.Suzanne.material}
-        position={[0, 1, 0]}
+        position={[0, 0.5, 0]}
         scale={[0.25, 0.25, 0.25]}
       >
         {children}
@@ -79,27 +90,14 @@ const CarObject = ({ children }) => {
 };
 
 export default function Car() {
-  const lights = useRef();
+  // const lights = useRef();
   // const body = useRef();
-  useFrame((state, delta) => {
-    console.log(lights);
-  });
+  // useFrame((state, delta) => {
+  //   console.log(lights);
+  // });
   return (
     <CarObject>
       <MyCamera />
-      {/* <directionalLight
-        ref={lights}
-        castShadow
-        position={[4, 4, 1]}
-        intensity={1.5}
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-near={1}
-        shadow-camera-far={10}
-        shadow-camera-top={10}
-        shadow-camera-right={10}
-        shadow-camera-bottom={-10}
-        shadow-camera-left={-10}
-      /> */}
       <Lights />
     </CarObject>
     // </mesh> */}
