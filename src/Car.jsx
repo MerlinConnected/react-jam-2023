@@ -60,10 +60,6 @@ const CarObject = ({ children }) => {
     mesh.current.position.x -= direction.x * delta * speed;
     mesh.current.position.z -= direction.z * delta * speed;
 
-    // pointLight follow along
-    // pointLight.current.position.z = body.current.position.z + 1;
-    // pointLight.current.position.x = body.current.position.x;
-    // pointLight.current.position.y -= slowSine / 80;
   });
   return (
     // <RigidBody
@@ -124,7 +120,21 @@ export default function Car() {
     <CarObject>
       <MyCamera />
     </CarObject>
+        </mesh> */}
+        <directionalLight
+          castShadow
+          position={[4, 4, 1]}
+          intensity={1.5}
+          shadow-mapSize={[1024, 1024]}
+          shadow-camera-near={1}
+          shadow-camera-far={10}
+          shadow-camera-top={10}
+          shadow-camera-right={10}
+          shadow-camera-bottom={-10}
+          shadow-camera-left={-10}
+        />
+      </RigidBody>
+      <Lights />
+    </group>
   );
 }
-
-useGLTF.preload("/suzanne.gltf");
