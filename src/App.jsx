@@ -1,7 +1,14 @@
 import { Canvas } from "@react-three/fiber";
-import { KeyboardControls, OrbitControls } from "@react-three/drei";
+import {
+  KeyboardControls,
+  OrbitControls,
+  OrthographicCamera,
+  PointerLockControls,
+} from "@react-three/drei";
 import { Physics, RigidBody } from "@react-three/rapier";
 import Car from "./Car";
+import Obstacle from "./Obstacle";
+
 import { Perf } from "r3f-perf";
 import { useGLTF } from "@react-three/drei";
 import React, { useRef } from "react";
@@ -27,6 +34,7 @@ export default function App() {
               scale={[10, 10, 10]}
               position={[0, 0, 0]}
             />
+            <Obstacle position={[0, 0, 0]} />
           </RigidBody>
           <RigidBody type="fixed">
             <mesh position={[0, -0.1, 0]} receiveShadow>
@@ -34,7 +42,7 @@ export default function App() {
               <meshPhysicalMaterial color="darkblue" />
             </mesh>
           </RigidBody>
-          <Car castShadow></Car>
+          <Car castShadow />
         </Physics>
       </Canvas>
     </KeyboardControls>
